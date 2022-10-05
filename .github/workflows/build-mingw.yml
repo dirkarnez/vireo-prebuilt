@@ -1,0 +1,79 @@
+name: cpp-cmake-mingw-prebuilt-release-actions-workflow
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'c*'
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: windows-2019
+    env:
+      libraryName: vireo
+      installationPath: vireo-installation
+      mingwTargetZip: vireo-${{ github.ref_name }}-x86_64-posix-seh-rev0-8.1.0.zip
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: git clone
+        shell: cmd
+        run: git clone --recursive https://github.com/twitter/vireo.git # && cd x264 && git checkout ${{ env.tagName }}
+      
+      - name: Install MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          install: make autoconf automake libtool autogen perl
+          
+      - name: curl l-smash-v2.14.5-x86_64-posix-seh-rev0-8.1.0.zip
+        shell: cmd
+        run:  cd /d ${{ github.workspace }} && curl https://github.com/dirkarnez/l-smash-prebuilt/releases/download/v2.14.5/l-smash-v2.14.5-x86_64-posix-seh-rev0-8.1.0.zip -L --output l-smash-v2.14.5-x86_64-posix-seh-rev0-8.1.0.zip && dir && 7z.exe x l-smash-v2.14.5-x86_64-posix-seh-rev0-8.1.0.zip -o"l-smash-v2.14.5-x86_64-posix-seh-rev0-8.1.0"
+        
+      - name: curl x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z
+        shell: cmd
+        run:  cd /d ${{ github.workspace }} && curl https://github.com/2641797006/c/blob/master/GCC-zip/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z?raw=true -L --output x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z && dir && 7z.exe x x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z
+
+      - name: curl nasm-2.15.05-win64.zip
+        shell: cmd
+        run: cd /d ${{ github.workspace }} && curl https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip -L --output nasm-2.15.05-win64.zip && dir && 7z.exe x nasm-2.15.05-win64.zip
+      
+      - name: git clone pkg-config
+        shell: cmd
+        run: git clone --recursive https://github.com/dirkarnez/pkg-config-action.git && xcopy /E /H /Y /C "${{ github.workspace }}\pkg-config-action\*" "${{ github.workspace }}\mingw64\bin" && cd /d "${{ github.workspace }}\mingw64\bin" && pkg-config.exe --version
+      
+      - name: set PATH, check mingw version, build and install
+        shell: msys2 {0}
+        run: |
+            workspace=$(pwd) &&
+            cd l-smash-v2.14.5-x86_64-posix-seh-rev0-8.1.0 &&
+            lsmash_location=$(pwd)
+            ls &&
+            cd .. &&
+            cd vireo/vireo &&
+            export PATH="$workspace/nasm-2.15.05:$workspace/mingw64:$workspace/mingw64/bin:$workspace/msys64/usr/bin:/usr/bin" &&
+            g++ --version && 
+            export CPPFLAGS="$CPPFLAGS -I $lsmash_location/include" &&
+            export LDFLAGS="$LDFLAGS -L $lsmash_location/lib" &&
+            export LIBS="$LIBS -llsmash" &&
+            echo $CPPFLAGS &&
+            echo $LDFLAGS &&
+            echo $LIBS &&
+            (./configure  --enable-static --disable-shared --prefix="$(pwd)/${{ env.installationPath }}" || cat ./config.log) &&
+            make &&
+            make install
+            
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          directory: "${{ github.workspace }}/vireo/vireo/${{ env.installationPath }}"
+          filename: "${{ env.mingwTargetZip }}"
+        
+      - name: Release prebuilt
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ github.workspace }}/vireo/vireo/${{ env.installationPath }}/${{ env.mingwTargetZip }}"
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}

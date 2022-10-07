@@ -29,7 +29,7 @@
 #include "imagecore/image/rgba.h"
 #include "imagecore/image/yuv.h"
 #include "imagecore/formats/exif/exifwriter.h"
-#include <stdlib.h>
+#include <string.h>
 
 #include "jerror.h"
 extern "C" {

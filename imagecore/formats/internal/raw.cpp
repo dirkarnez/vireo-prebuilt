@@ -24,7 +24,7 @@
 
 #include "raw.h"
 #include "imagecore/image/interleaved.h"
-#include <stdlib.h>
+#include <string.h>
 
 namespace imagecore {
 

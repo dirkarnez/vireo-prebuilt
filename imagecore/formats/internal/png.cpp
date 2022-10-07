@@ -28,7 +28,7 @@
 #include "imagecore/image/interleaved.h"
 
 #include "libpng16/png.h"
-#include <stdlib.h>
+#include <string.h>
 
 namespace imagecore {
 

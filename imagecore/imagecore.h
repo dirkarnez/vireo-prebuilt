@@ -39,6 +39,7 @@
 #define memalign(a, s) malloc(s)
 #else
 #include <malloc.h>
+#define memalign(a, s) aligned_alloc(a, s)
 #endif
 
 #define IMAGECORE_EXPORT __attribute__ ((visibility ("default")))

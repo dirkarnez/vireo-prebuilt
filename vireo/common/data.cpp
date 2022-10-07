@@ -24,7 +24,12 @@
 
 #include <fcntl.h>
 #include <iomanip>
-#include <sys/mman.h>
+#if defined(_WIN32) || defined(_WIN64)
+  #include "vireo/common/util.h"
+#else
+	#include <sys/mman.h>
+#endif
+
 #include <sys/stat.h>
 
 #include "vireo/base_cpp.h"

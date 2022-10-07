@@ -29,7 +29,13 @@
 #include <unistd.h>
 #include <sys/shm.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
+
+#if defined(_WIN32) || defined(_WIN64)
+	#include "imagecore/image/internal/platform_support.h"
+#else
+	#include <sys/mman.h>
+#endif
+
 
 #define MAX_COMMANDS 128
 

@@ -29,6 +29,10 @@
 #include "imagecore/image/yuv.h"
 #include <string.h>
 
+#if defined(_WIN32) || defined(_WIN64)
+	#include "imagecore/image/internal/platform_support.h"
+#endif
+
 namespace imagecore {
 
 REGISTER_IMAGE_READER(ImageReaderWebP);

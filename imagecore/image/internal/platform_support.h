@@ -53,6 +53,9 @@ bool checkForCPUSupport(ECPUFeature feature);
 	#ifdef __cplusplus
 	extern "C" {
 	#endif
+	
+	#include <string.h>
+	#include <ctype.h>
 
 	#define PROT_NONE       0
 	#define PROT_READ       1
@@ -81,7 +84,24 @@ bool checkForCPUSupport(ECPUFeature feature);
 	int     mlock(const void *addr, size_t len);
 	int     munlock(const void *addr, size_t len);
 
+	static int strcasecmp(const char * s1, const char * s2)
+    {
+        const unsigned char * u1 = (const unsigned char*) s1;
+        const unsigned char * u2 = (const unsigned char*) s2;
+        int result;
+
+        while ((result = tolower(*u1) - tolower(*u2)) == 0 && *u1 != 0)
+        {
+            *u1++;
+            *u2++;
+        }
+
+        return result;
+    }
+
 	#ifdef __cplusplus
 	};
 	#endif
+
+
 #endif

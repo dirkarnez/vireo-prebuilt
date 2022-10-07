@@ -17,10 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: git clone
-        shell: cmd
-        run: git clone --recursive https://github.com/twitter/vireo.git # && cd x264 && git checkout ${{ env.tagName }}
+#       - name: git clone
+#         shell: cmd
+#         run: git clone --recursive https://github.com/twitter/vireo.git # && cd x264 && git checkout ${{ env.tagName }}
       
+      - name: Checkout
+        uses: actions/checkout@v3
+        
       - name: Install MSYS2
         uses: msys2/setup-msys2@v2
         with:
@@ -51,7 +54,7 @@ jobs:
             lsmash_location=$(pwd)
             ls &&
             cd .. &&
-            cd vireo/vireo &&
+            cd vireo &&
             export PATH="$workspace/nasm-2.15.05:$workspace/mingw64:$workspace/mingw64/bin:$workspace/msys64/usr/bin:/usr/bin" &&
             g++ --version && 
             export CPPFLAGS="$CPPFLAGS -I $lsmash_location/include" &&
@@ -68,12 +71,12 @@ jobs:
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          directory: "${{ github.workspace }}/vireo/vireo/${{ env.installationPath }}"
+          directory: "${{ github.workspace }}/vireo/${{ env.installationPath }}"
           filename: "${{ env.mingwTargetZip }}"
         
       - name: Release prebuilt
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "${{ github.workspace }}/vireo/vireo/${{ env.installationPath }}/${{ env.mingwTargetZip }}"
+          artifacts: "${{ github.workspace }}//vireo/${{ env.installationPath }}/${{ env.mingwTargetZip }}"
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}

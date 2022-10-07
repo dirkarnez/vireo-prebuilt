@@ -29,6 +29,7 @@
 #include "writer.h"
 #include <sys/stat.h>
 
+#define _WIN64
 #if defined(_WIN32) || defined(_WIN64)
 
 	#ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.                   

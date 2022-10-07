@@ -30,10 +30,6 @@
 #include "libpng16/png.h"
 #include <stdlib.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-	#include "imagecore/image/internal/platform_support.h"
-#endif
-
 namespace imagecore {
 
 REGISTER_IMAGE_READER(ImageReaderPNG);

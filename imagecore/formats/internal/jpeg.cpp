@@ -29,12 +29,7 @@
 #include "imagecore/image/rgba.h"
 #include "imagecore/image/yuv.h"
 #include "imagecore/formats/exif/exifwriter.h"
-
-
-#if defined(_WIN32) || defined(_WIN64)
-	#include "imagecore/image/internal/platform_support.h"
-#endif
-
+#include <stdlib.h>
 
 #include "jerror.h"
 extern "C" {

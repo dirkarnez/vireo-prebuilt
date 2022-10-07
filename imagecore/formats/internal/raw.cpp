@@ -24,10 +24,7 @@
 
 #include "raw.h"
 #include "imagecore/image/interleaved.h"
-
-#if defined(_WIN32) || defined(_WIN64)
-	#include "imagecore/image/internal/platform_support.h"
-#endif
+#include <stdlib.h>
 
 namespace imagecore {
 

@@ -30,7 +30,13 @@
 #include "imagecore/image/rgba.h"
 #include "imagecore/image/grayscale.h"
 #include <sys/stat.h>
-#include <sys/mman.h>
+
+#if defined(_WIN32) || defined(_WIN64)
+	#include "imagecore/image/internal/platform_support.h"
+#else
+	#include <sys/mman.h>
+#endif
+
 #include <errno.h>
 
 #define MAX_FORMATS 32

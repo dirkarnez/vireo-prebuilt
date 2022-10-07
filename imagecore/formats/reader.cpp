@@ -29,8 +29,8 @@
 #include "writer.h"
 #include <sys/stat.h>
 
-#define _WIN64
-#if defined(_WIN32) || defined(_WIN64)
+// #define _WIN64
+// #if defined(_WIN32) || defined(_WIN64)
 
 	#ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.                   
 	#define _WIN32_WINNT 0x0501	// Change this to the appropriate value to target other versions of Windows.
@@ -258,9 +258,9 @@ int munlock(const void *addr, size_t len)
     
     return -1;
 }
-#else
-	#include <sys/mman.h>
-#endif
+// #else
+// 	#include <sys/mman.h>
+// #endif
 
 #define SIGNATURE_MAX_SIZE 8
 #define MAX_FORMATS 32

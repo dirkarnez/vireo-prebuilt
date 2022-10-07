@@ -39,7 +39,6 @@
 #define memalign(a, s) malloc(s)
 #else
 #include <malloc.h>
-#define __MINGW32__
 #define memalign(a, s) __mingw_aligned_malloc(a, s)
 #endif
 

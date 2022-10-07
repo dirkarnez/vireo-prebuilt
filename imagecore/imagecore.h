@@ -39,7 +39,8 @@
 #define memalign(a, s) malloc(s)
 #else
 #include <malloc.h>
-#define memalign(a, s) aligned_alloc(a, s)
+#define __MINGW32__
+#define memalign(a, s) __mingw_aligned_malloc(a, s)
 #endif
 
 #define IMAGECORE_EXPORT __attribute__ ((visibility ("default")))
